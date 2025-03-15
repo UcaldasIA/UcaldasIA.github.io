@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Futuro de la IA | Facultad de Inteligencia Artificial</title>
+    <style>
+        :root {
+            --primary-color: #00ff9d;
+            --secondary-color: #0066ff;
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-border {
+            position: relative;
+            padding: 2rem;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
+            border-radius: 10px;
+            background: linear-gradient(45deg, rgba(0,255,157,0.1), rgba(0,102,255,0.1));
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-size: 4rem;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            animation: text-glow 2s ease-in-out infinite alternate;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .countdown-item {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .grid-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        /* Animaciones */
+        @keyframes text-glow {
+            from { text-shadow: 0 0 10px var(--primary-color); }
+            to { text-shadow: 0 0 20px var(--secondary-color), 0 0 10px var(--primary-color); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Nuevas secciones con parallax */
+        .parallax-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .parallax-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Botón de modo oscuro/claro */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="hero">
+        <div class="grid-animation"></div>
+        <div class="cyber-border floating">
+            <h1 class="title">El Futuro de la IA<br>Está por Decidirse</h1>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div>Días</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div>Horas</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div>Minutos</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div>Segundos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="parallax-section" data-parallax="0.3">
+        <h2>Una Nueva Era para la Inteligencia Artificial</h2>
+    </div>
+
+    <div class="parallax-section" data-parallax="0.5">
+        <h2>Tu Voz Será Fundamental</h2>
+    </div>
+
+    <div class="theme-toggle">🌓</div>
+
+    <script>
+        // Sistema de partículas
+        class Particle {
+            constructor(canvas, ctx) {
+                this.canvas = canvas;
+                this.ctx = ctx;
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 0.5,
+                    y: (Math.random() - 0.5) * 0.5
+                };
+                this.radius = Math.random() * 2;
+                this.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            }
+
+            draw() {
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = this.color;
+                this.ctx.fill();
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+
+                if (this.x < 0 || this.x > this.canvas.width) this.velocity.x *= -1;
+                if (this.y < 0 || this.y > this.canvas.height) this.velocity.y *= -1;
+
+                this.draw();
+            }
+        }
+
+        // Inicializar partículas
+        const initParticles = () => {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = Array(1000).fill().map(() => new Particle(canvas, ctx));
+
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => particle.update());
+                requestAnimationFrame(animate);
+            };
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        };
+
+        // Countdown actualizado
+        const countdown = () => {
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 30); // 30 días desde ahora
+
+            const updateTimer = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.querySelector('.countdown').innerHTML = '<div class="countdown-number">¡Es hora!</div>';
+                }
+            };
+
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
+        };
+
+        // Efecto parallax
+        const parallax = () => {
+            document.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                document.querySelectorAll('[data-parallax]').forEach(element => {
+                    const speed = parseFloat(element.dataset.parallax);
+                    element.style.backgroundPositionY = (scrolled * speed) + 'px';
+                });
+            });
+        };
+
+        // Animaciones al scroll
+        const scrollAnimations = () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.parallax-section').forEach(section => {
+                observer.observe(section);
+            });
+        };
+
+        // Tema claro/oscuro
+        const themeToggle = () => {
+            const toggle = document.querySelector('.theme-toggle');
+            toggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                if (document.body.classList.contains('light-theme')) {
+                    document.documentElement.style.setProperty('--bg-color', '#f0f0f0');
+                    document.documentElement.style.setProperty('--text-color', '#0a0a0a');
+                } else {
+                    document.documentElement.style.setProperty('--bg-color', '#0a0a0a');
+                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                }
+            });
+        };
+        // Interactive Hover Effects
+        document.querySelector('.cyber-border').addEventListener('mousemove', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            document.documentElement.style.setProperty('--primary-color', `hsl(${(x / rect.width) * 360}, 100%, 50%)`);
+            document.documentElement.style.setProperty('--secondary-color', `hsl(${(y / rect.height) * 360}, 100%, 50%)`);
+        });
+
+        // Easter egg: Konami Code
+        const konamiCode = () => {
+            const sequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let progress = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === sequence[progress]) {
+                    progress++;
+                    if (progress === sequence.length) {
+                        alert('¡Has descubierto un secreto! 🎉');
+                        progress = 0;
+                    }
+                } else {
+                    progress = 0;
+                }
+            });
+        };
+
+        // Inicialización
+        window.onload = () => {
+            initParticles();
+            countdown();
+            parallax();
+            scrollAnimations();
+            themeToggle();
+            konamiCode();
+            
+            // Animación de entrada
+            gsap.from('.cyber-border', {
+                duration: 1.5,
+                scale: 0,
+                opacity: 0,
+                ease: "elastic.out(1, 0.3)"
+            });
+        };
+    </script>
+</body>
+</html>
