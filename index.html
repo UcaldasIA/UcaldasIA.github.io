@@ -117,7 +117,7 @@
         .parallax-section {
             height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: center !important;
             justify-content: center;
             background-attachment: fixed;
             background-position: center;
@@ -143,6 +143,34 @@
             border-radius: 50%;
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(5px);
+        }
+        /* add */
+        .split-text {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+          text-align: center;
+        }
+        
+        .line-part {
+          display: inline;
+        }
+        
+        @media (max-width: 768px) {
+          .split-text {
+            grid-template-columns: 1fr;
+            gap: 0.3rem;
+          }
+          
+          .line-part {
+            display: block;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .split-text {
+            font-size: 1.5rem;
+          }
         }
     </style>
 </head>
@@ -173,10 +201,14 @@
             </div>
         </div>
     </div>
+    <h2 class="split-text">
+        <span class="line-part">Una Nueva Era para</span>
+        <span class="line-part">la Inteligencia Artificial</span>
+      </h2>
 
-    <div class="parallax-section" data-parallax="0.3">
+    <!-- <div class="parallax-section" data-parallax="0.5" style="justify-content: center !important;">
         <h2>Una Nueva Era para la Inteligencia Artificial</h2>
-    </div>
+    </div> -->
 
     <div class="parallax-section" data-parallax="0.5">
         <h2>Tu Voz Será Fundamental</h2>
