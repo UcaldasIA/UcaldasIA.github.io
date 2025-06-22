@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olimpiadas de Programación – Dashboard Analítico</title>
+  <!-- Frameworks & Assets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    :root{
+      --primary:#0d6efd;--accent:#ffcc00;--dark:#0f172a;--light:#f8fafc;
+    }
+    body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);}    
+    .section-title{font-size:2.25rem;font-weight:800;margin-bottom:1.75rem;position:relative;}
+    .section-title::after{content:'';width:90px;height:4px;background:var(--accent);position:absolute;left:0;bottom:-12px;}
+    .card-kpi{background:var(--primary);color:#fff;border:none;border-radius:.75rem;}
+    canvas{background:#fff;border-radius:.75rem;box-shadow:0 0 8px rgba(0,0,0,.04);padding:1rem;cursor:pointer;}
+    #clearBtn{cursor:pointer;color:var(--primary);text-decoration:underline;font-weight:600;display:none;}
+  </style>
+</head>
+<body>
+<!-- HERO -->
+<section class="hero text-center py-5" style="background:linear-gradient(135deg,var(--primary),#6610f2);color:#fff;">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Tablero Analítico – Olimpiadas de Programación</h1>
+    <p class="lead">Interactúa con los gráficos para filtrar la información como en Power BI.</p>
+    <span id="clearBtn">Quitar filtros</span>
+  </div>
+</section>
+
+<!-- KPI SECTION -->
+<section class="py-5 bg-white" id="kpis">
+  <div class="container">
+    <h2 class="section-title">Visión panorámica</h2>
+    <div class="row g-4 mb-4">
+      <div class="col-md-4"><div class="card card-kpi shadow-sm p-4 text-center h-100"><h3 id="kpiRespuestas" class="display-5 mb-0">--</h3><p class="mb-0">Respuestas totales</p></div></div>
+      <div class="col-md-4"><div class="card card-kpi shadow-sm p-4 text-center h-100"><h3 id="kpiProgramas" class="display-5 mb-0">--</h3><p class="mb-0">Programas representados</p></div></div>
+      <div class="col-md-4"><div class="card card-kpi shadow-sm p-4 text-center h-100"><h3 id="kpiConocimientos" class="display-5 mb-0">--</h3><p class="mb-0">% con experiencia previa</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DISTRIBUCIONES PRINCIPALES -->
+<section class="py-5" style="background:var(--light);">
+  <div class="container">
+    <h2 class="section-title">Distribuciones clave</h2>
+    <div class="row g-5">
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>Programas académicos</h5>
+        <canvas id="chartProgram" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-layer-group me-2 text-primary"></i>Semestres</h5>
+        <canvas id="chartSemester" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-brain me-2 text-primary"></i>Nivel de conocimientos</h5>
+        <canvas id="chartKnowledge" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-table-columns me-2 text-primary"></i>Skill por programa (stack)</h5>
+        <canvas id="chartCross" height="320"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERESES -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <h2 class="section-title">Preferencias & Temáticas</h2>
+    <div class="row g-5">
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-people-group me-2 text-primary"></i>Tipo de actividad preferida</h5>
+        <canvas id="chartActivity" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb me-2 text-primary"></i>Temas de mayor interés</h5>
+        <canvas id="chartTopics" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-calendar-days me-2 text-primary"></i>Días preferidos</h5>
+        <canvas id="chartDays" height="320"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-clock me-2 text-primary"></i>Horarios disponibles</h5>
+        <canvas id="chartSchedule" height="320"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="text-center py-4" style="background:#111827;color:#94a3b8;">
+  <p class="mb-0">© 2025 Facultad de Ingeniería en Informática – Universidad de Caldas</p>
+</footer>
+
+<script>
+const CSV_FILE='Encuesta Olimpiadas - Respuestas de formulario 1.csv';
+const normalize=s=> (s||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const countBy=a=>a.reduce((o,v)=>(o[v]=(o[v]||0)+1,o),{});
+const countMulti=a=>a.reduce((o,row)=>{(row||'').split(',').forEach(r=>{const v=r.trim();if(v) o[v]=(o[v]||0)+1});return o},{})
+
+let allRows=[],filters={};
+const charts={};
+const keys={};
+
+function drawBar(id, counts, horiz=false){
+  const ctx=document.getElementById(id).getContext('2d');
+  const chart=new Chart(ctx,{type:'bar',data:{labels:Object.keys(counts),datasets:[{data:Object.values(counts),borderWidth:1}]},options:{indexAxis:horiz?'y':'x',plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  charts[id]=chart;
+  return chart;
+}
+function drawStacked(id, labels, cats, matrix){
+  const ds=cats.map((c,i)=>({label:c,data:matrix.map(r=>r[i]),stack:'s'}));
+  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:ds},options:{scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}}}});
+}
+function refreshCounts(rows){
+  // KPIs
+  document.getElementById('kpiRespuestas').textContent=rows.length;
+  const progCounts=countBy(rows.map(r=>r[keys.prog]||'Sin dato'));
+  document.getElementById('kpiProgramas').textContent=Object.keys(progCounts).length;
+  const exp=rows.filter(r=>normalize(r[keys.knw]).startsWith('si')).length;
+  document.getElementById('kpiConocimientos').textContent=Math.round(exp/rows.length*100)+'%';
+
+  // update bar data helper
+  const update=(id,counts)=>{const c=charts[id];c.data.labels=Object.keys(counts);c.data.datasets[0].data=Object.values(counts);c.update();};
+
+  update('chartProgram',progCounts);
+  update('chartSemester',countBy(rows.map(r=>String(r[keys.sem]||'Sin dato'))));
+  update('chartKnowledge',countBy(rows.map(r=>r[keys.knw]||'Sin dato')));
+  update('chartActivity',countMulti(rows.map(r=>r[keys.act])));
+  update('chartTopics',countMulti(rows.map(r=>r[keys.top])));
+  update('chartDays',countMulti(rows.map(r=>r[keys.day])));
+  update('chartSchedule',countMulti(rows.map(r=>r[keys.sch])));
+
+  // Stacked
+  const kc=[...new Set(rows.map(r=>r[keys.knw]||'Sin dato'))];
+  const pl=Object.keys(progCounts);
+  const matrix=pl.map(p=>kc.map(k=>rows.filter(r=>r[keys.prog]===p&&r[keys.knw]===k).length));
+  const cross=charts['chartCross'];
+  cross.data.labels=pl;
+  cross.data.datasets=kc.map((c,i)=>({label:c,data:matrix.map(r=>r[i]),stack:'s'}));
+  cross.update();
+}
+
+function toggleFilter(field,value){
+  if(filters[field]===value){delete filters[field];}else{filters[field]=value;}
+  document.getElementById('clearBtn').style.display=Object.keys(filters).length?'inline':'none';
+  const rows=allRows.filter(r=>{
+    for(let f in filters){if(r[keys[f]]!==filters[f]) return false;}
+    return true;
+  });
+  refreshCounts(rows);
+}
+
+document.getElementById('clearBtn').onclick=()=>{filters={};refreshCounts(allRows);document.getElementById('clearBtn').style.display='none';};
+
+fetch(CSV_FILE).then(r=>r.text()).then(csv=>{
+  allRows=Papa.parse(csv,{header:true}).data.filter(r=>Object.values(r).some(v=>v!==''));
+  if(!allRows.length)return;
+  const hdr=Object.keys(allRows[0]);
+  const find=s=>hdr.find(h=>normalize(h).includes(normalize(s)));
+  keys.prog=find('programa academico');
+  keys.sem=find('semestre');
+  keys.knw=find('conocimientos previos');
+  keys.act=find('estarias interesado');
+  keys.top=find('temas');
+  keys.day=find('dia');
+  keys.sch=find('horario');
+
+  // inicial draw
+  drawBar('chartProgram',{} ,true);
+  drawBar('chartSemester',{});
+  drawBar('chartKnowledge',{},true);
+  drawStacked('chartCross',[],[],[]);
+  drawBar('chartActivity',{},true);
+  drawBar('chartTopics',{},true);
+  drawBar('chartDays',{});
+  drawBar('chartSchedule',{});
+  refreshCounts(allRows);
+
+  // add click interactions
+  const addClick=(id,field)=>{
+    document.getElementById(id).onclick=e=>{
+      const chart=charts[id];
+      const pts=chart.getElementsAtEventForMode(e,'nearest',{intersect:true},true);
+      if(!pts.length)return;
+      const label=chart.data.labels[pts[0].index];
+      toggleFilter(field,label);
+    };
+  };
+
+  addClick('chartProgram','prog');
+  addClick('chartSemester','sem');
+  addClick('chartKnowledge','knw');
+  addClick('chartActivity','act');
+  addClick('chartTopics','top');
+  addClick('chartDays','day');
+  addClick('chartSchedule','sch');
+});
+</script>
+</body>
+</html>
