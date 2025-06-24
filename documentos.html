@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentos – Proyecto Olimpiadas</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Font: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --accent: #ffcc00;
+      --dark: #0f172a;
+      --light: #f8fafc;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+    .navbar {
+      background-color: var(--primary);
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+    }
+    .doc-card {
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 0.75rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+      background-color: #fff;
+    }
+    .doc-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+    }
+    .doc-icon {
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+    .btn-view {
+      background-color: var(--primary);
+      color: #fff;
+    }
+    .btn-view:hover {
+      background-color: var(--dark);
+      color: #fff;
+    }
+    .ratio-embed {
+      margin: 0 auto;
+      max-width: 80%;
+      height: 400px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg py-3">
+    <div class="container-fluid">
+      <a class="navbar-brand text-center" href="#"> Documentación Olimpiadas</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"><i class="fa-solid fa-bars" style="color:#fff;"></i></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="tablero.html">Resultado encuesta</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Documentos Section -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="section-title ">Documentos Relacionados</h2>
+      <div class="d-flex flex-column align-items-center gap-4">
+        <!-- Documento: Proyecto Google Doc -->
+        <div class="doc-card p-4 w-100" style="max-width: 1200px;">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-file-lines doc-icon me-3"></i>
+            <div>
+              <h5 class="fw-bold mb-1">Lineamientos OLIMPIADAS U CALDAS</h5>
+              <p class="mb-0 text-muted">Documento principal del proyecto.</p>
+            </div>
+          </div>
+          <div class="ratio-embed mb-3">
+            <iframe src="https://docs.google.com/document/d/e/2PACX-1vQ-aA_0qrNpDN8Lcmro7l7kWkzmTSw0ocxUllsXGLAvhnmVoaEHUOgvJHDZ403GFg/pub?embedded=true" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <div class="text-center">
+            <a href="https://docs.google.com/document/d/e/2PACX-1vQ-aA_0qrNpDN8Lcmro7l7kWkzmTSw0ocxUllsXGLAvhnmVoaEHUOgvJHDZ403GFg/pub" target="_blank" class="btn btn-view">
+              <i class="fa-solid fa-eye me-1"></i>Ver Documento
+            </a>
+          </div>
+        </div>
+        <!-- Documento: Hoja de Cálculo Google Sheets -->
+        <div class="doc-card p-4 w-100" style="max-width: 1200px;">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-file-excel doc-icon me-3"></i>
+            <div>
+              <h5 class="fw-bold mb-1">Presupuesto Olimpiadas Programación.</h5>
+              <p class="mb-0 text-muted">Presupuesto Olimpiadas Programación.</p>
+            </div>
+          </div>
+          <div class="ratio-embed mb-3">
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRThBA1eVnFvtPkK9Ym4clHK4GHtBkMkh8GCcRF3EmgJiUUqcIswA0SaRh29Z7j2A/pubhtml?widget=true&amp;headers=false" width="100%" height="100%" frameborder="0"></iframe>
+          </div>
+          <div class="text-center">
+            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRThBA1eVnFvtPkK9Ym4clHK4GHtBkMkh8GCcRF3EmgJiUUqcIswA0SaRh29Z7j2A/pubhtml  " target="_blank" class="btn btn-view">
+              <i class="fa-solid fa-eye me-1"></i>Ver Hoja
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center" style="background: var(--dark); color:#94a3b8;">
+    <p class="mb-0">© 2025 Facultad de Ingeniería en Informática – Universidad de Caldas</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
